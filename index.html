@@ -1202,6 +1202,10 @@
           <h4><i class="fa-solid fa-hand-sparkles"></i> طريقة الاستخدام</h4>
           <p id="modal-usage">طريقة الاستخدام...</p>
         </div>
+        <div class="modal-section">
+          <h4><i class="fa-solid fa-triangle-exclamation"></i> تحذيرات هامة</h4>
+          <p id="modal-warnings" style="color: #c53030;">لا توجد تحذيرات خاصة.</p>
+        </div>
         <div class="modal-actions">
           <button class="btn-buy-now" id="modal-add-btn">إضافة إلى السلة</button>
         </div>
@@ -1246,28 +1250,29 @@
 
   <script>
     const PRODS = [
-      { id: 'sunblock', cat: 'بشرة', name: 'واقي شمس NEMORA SPF 50+', price: '280 جنيه', desc: 'حماية فائقة من أشعة الشمس UVA/UVB، لا يترك أثراً دهنياً.', usage: 'يوضع قبل التعرض بـ 20 دقيقة.', img: 'https://images.unsplash.com/photo-1552083974-5fefe8c9ef14?auto=format&fit=crop&q=80&w=600' },
-      { id: 'facewash', cat: 'بشرة', name: 'غسول الوجه الهيدراتينج', price: '190 جنيه', desc: 'ينظف بعمق ويرطب بالألوفيرا وماء البامبو.', usage: 'يدلك على بشرة مبللة صباحاً ومساءً.', img: 'https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&q=80&w=600' },
-      { id: 'micellar', cat: 'بشرة', name: 'ماء ميسيلار منظف', price: '160 جنيه', desc: 'يزيل المكياج والشوائب بلطف دون الحاجة للشطف.', usage: 'يوضع على قطعة قطن ويمسح بها الوجه.', img: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&q=80&w=600' },
-      { id: 'nightcream', cat: 'بشرة', name: 'كريم ليلي مجدد بـ REVITAL', price: '310 جنيه', desc: 'يعمل على إصلاح البشرة بفضل الريتينول النباتي.', usage: 'يوضع على وجه نظيف قبل النوم.', img: 'https://images.unsplash.com/photo-1617897903246-719242758337?auto=format&fit=crop&q=80&w=600' },
-      { id: 'eyecream', cat: 'بشرة', name: 'كريم محيط العين EYE CARE PRO', price: '240 جنيه', desc: 'يقلل الهالات السوداء والانتفاخات بالكافيين.', usage: 'يطبطب حول عظمة العين صباحاً ومساءً.', img: 'https://images.unsplash.com/photo-1556228021-ab7b9c7db908?auto=format&fit=crop&q=80&w=600' },
-      { id: 'niacinamide', cat: 'سيروم', name: 'سيروم نياسيناميد GLOW LAB 10%', price: '330 جنيه', desc: 'يقلص المسام وينظم الإفرازات الدهنية.', usage: 'مرة يومياً مساءً.', img: 'https://images.unsplash.com/photo-1620917670397-dc7bc43e815e?auto=format&fit=crop&q=80&w=600' },
-      { id: 'salicylic', cat: 'سيروم', name: 'سيروم ساليسيليك أسيد CLEAR SKIN', price: '310 جنيه', desc: 'يعالج الرؤوس السوداء والحبوب.', usage: 'يوضع على مناطق الحبوب فقط.', img: 'https://images.unsplash.com/photo-1596462502278-af407713661d?auto=format&fit=crop&q=80&w=600' },
-      { id: 'retinol', cat: 'سيروم', name: 'سيروم ريتينول TIME REVERSE 0.5%', price: '390 جنيه', desc: 'محارب فعال للتجاعيد وعلامات التقدم بالعمر.', usage: 'يستخدم تدريجياً مرتين أسبوعياً مساءً.', img: 'https://images.unsplash.com/photo-1620917669809-1af0497965de?auto=format&fit=crop&q=80&w=600' },
-      { id: 'ceramide', cat: 'بشرة', name: 'مرطب السيراميد BARRIER REPAIR', price: '290 جنيه', desc: 'يرمم حاجز البشرة المتضرر.', usage: 'صباحاً ومساءً كخطوة أخيرة.', img: 'https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&q=80&w=600' },
-      { id: 'hairmask', cat: 'شعر', name: 'ماسك الشعر بالأرجان HAIR THERAPY', price: '320 جنيه', desc: 'علاج مكثف للشعر التالف والمجهد.', usage: 'يترك 15 دقيقة ثم يشطف جيداً.', img: 'https://images.unsplash.com/photo-1631991645318-25f13fb0c3e1?auto=format&fit=crop&q=80&w=600' },
-      { id: 'shampoo', cat: 'شعر', name: 'شامبو NEMORA المغذي الفاخر', price: '220 جنيه', desc: 'خالي من السلفات، ينظف الشعر بلطف.', usage: 'يوضع على فروة الرأس ويدلك.', img: 'https://images.unsplash.com/photo-1559599141-3816a0b3f1e3?auto=format&fit=crop&q=80&w=600' },
-      { id: 'hair_oil', cat: 'شعر', name: 'زيت تقوية الجذور GROWTH BOOST', price: '280 جنيه', desc: 'يحفز نمو الشعر ويمنع التساقط.', usage: 'حمام زيت مرتين أسبوعياً.', img: 'https://images.unsplash.com/photo-1615396172061-002f236058e5?auto=format&fit=crop&q=80&w=600' },
-      { id: 'vitc', cat: 'سيروم', name: 'سيروم فيتامين C BRIGHT GLOW', price: '350 جنيه', desc: 'تفتيح ونضارة فورية بتركيز 10%.', usage: 'بضع قطرات مساءً قبل المرطب.', img: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&q=80&w=600' },
-      { id: 'hyaluronic', cat: 'سيروم', name: 'سيروم الهيالورونيك HYDRA BOOST', price: '340 جنيه', desc: 'ترطيب عميق لطبقات الجلد المتعددة.', usage: 'يوضع على بشرة منداة.', img: 'https://images.unsplash.com/photo-1601049541289-9b1b7abcfe19?auto=format&fit=crop&q=80&w=600' },
-      { id: 'ahabha', cat: 'سيروم', name: 'سيروم التقشير PORE PERFECT AHA/BHA', price: '380 جنيه', desc: 'يحسن ملمس البشرة ويعالج المسام.', usage: 'مرة أسبوعياً لمدة 10 دقائق فقط.', img: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&q=80&w=600' },
-      { id: 'bodybutter', cat: 'جسم', name: 'زبدة الجسم بالفانيليا LUXE BODY', price: '260 جنيه', desc: 'ترطيب عميق يدوم 24 ساعة للمناطق الجافة.', usage: 'بعد الاستحمام مباشرة.', img: 'https://images.unsplash.com/photo-1600857062241-98e5dba7214d?auto=format&fit=crop&q=80&w=600' },
-      { id: 'handcream', cat: 'جسم', name: 'كريم اليدين المفتح HAND CARE', price: '120 جنيه', desc: 'يحمي اليدين ويفتح عقل الأصابع.', usage: 'عند الحاجة طوال اليوم.', img: 'https://images.unsplash.com/photo-1556228021-ab7b9c7db907?auto=format&fit=crop&q=80&w=600' },
-      { id: 'body_scrub', cat: 'جسم', name: 'مقشر القهوة SKIN RENEWAL', price: '230 جنيه', desc: 'ينعم الجلد ويزيل الجلد الميت.', usage: 'يدلك بحركات دائرية على جسم مبلل.', img: 'https://images.unsplash.com/photo-1614859324967-bdf481940763?auto=format&fit=crop&q=80&w=600' },
-      { id: 'body_lotion', cat: 'جسم', name: 'لوشن التفتيح RADIANCE GLOW', price: '250 جنيه', desc: 'يوحد لون الجسم ويترك رائحة جذابة.', usage: 'يومياً بعد الاستحمام.', img: 'https://images.unsplash.com/photo-1556229167-73191319759d?auto=format&fit=crop&q=80&w=600' },
-      { id: 'deoro', cat: 'مزيل عرق', name: 'رول أون NEMORA المنعش', price: '140 جنيه', desc: 'حماية 48 ساعة مع تفتيح طبيعي.', usage: 'على بشرة نظيفة وجافة.', img: 'https://images.unsplash.com/photo-1594125355630-94965e74e27c?auto=format&fit=crop&w=600' },
-      { id: 'bodysplash', cat: 'جسم', name: 'بادي سبلاش NEMORA FRAGRANCE', price: '200 جنيه', desc: 'عطر منعش يدوم طويلاً.', usage: 'يرش على الجسم من مسافة 15 سم.', img: 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=600' }
+      { id: 'sunblock', cat: 'بشرة', name: 'واقي شمس NEMORA SPF 50+', price: '280 جنيه', desc: 'حماية فائقة من أشعة الشمس UVA/UVB، لا يترك أثراً دهنياً.', usage: 'يوضع قبل التعرض بـ 20 دقيقة.', warnings: 'للاستخدام الخارجي فقط. تجنب ملامسة العين.', img: 'https://images.unsplash.com/photo-1552083974-5fefe8c9ef14?auto=format&fit=crop&q=80&w=600' },
+      { id: 'facewash', cat: 'بشرة', name: 'غسول الوجه الهيدراتينج', price: '190 جنيه', desc: 'ينظف بعمق ويرطب بالألوفيرا وماء البامبو.', usage: 'يدلك على بشرة مبللة صباحاً ومساءً.', warnings: 'في حالة حدوث تهيج، توقف عن الاستخدام.', img: 'https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&q=80&w=600' },
+      { id: 'micellar', cat: 'بشرة', name: 'ماء ميسيلار منظف', price: '160 جنيه', desc: 'يزيل المكياج والشوائب بلطف دون الحاجة للشطف.', usage: 'يوضع على قطعة قطن ويمسح بها الوجه.', warnings: 'تجنب ملامسة العين مباشرة.', img: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&q=80&w=600' },
+      { id: 'nightcream', cat: 'بشرة', name: 'كريم ليلي مجدد بـ REVITAL', price: '310 جنيه', desc: 'يعمل على إصلاح البشرة بفضل الريتينول النباتي.', usage: 'يوضع على وجه نظيف قبل النوم.', warnings: 'قد يسبب وخزاً بسيطاً في البداية. استخدم واقي شمس صباحاً.', img: 'https://images.unsplash.com/photo-1617897903246-719242758337?auto=format&fit=crop&q=80&w=600' },
+      { id: 'eyecream', cat: 'بشرة', name: 'كريم محيط العين EYE CARE PRO', price: '240 جنيه', desc: 'يقلل الهالات السوداء والانتفاخات بالكافيين.', usage: 'يطبطب حول عظمة العين صباحاً ومساءً.', warnings: 'لا يوضع داخل العين.', img: 'https://images.unsplash.com/photo-1556228021-ab7b9c7db908?auto=format&fit=crop&q=80&w=600' },
+      { id: 'niacinamide', cat: 'سيروم', name: 'سيروم نياسيناميد GLOW LAB 10%', price: '330 جنيه', desc: 'يقلص المسام وينظم الإفرازات الدهنية.', usage: 'مرة يومياً مساءً.', warnings: 'لا يستخدم مع فيتامين C في نفس الوقت.', img: 'https://images.unsplash.com/photo-1620917670397-dc7bc43e815e?auto=format&fit=crop&q=80&w=600' },
+      { id: 'salicylic', cat: 'سيروم', name: 'سيروم ساليسيليك أسيد CLEAR SKIN', price: '310 جنيه', desc: 'يعالج الرؤوس السوداء والحبوب.', usage: 'يوضع على مناطق الحبوب فقط.', warnings: 'قد يسبب جفافاً. ترطيب البشرة ضروري بعده.', img: 'https://images.unsplash.com/photo-1596462502278-af407713661d?auto=format&fit=crop&q=80&w=600' },
+      { id: 'retinol', cat: 'سيروم', name: 'سيروم ريتينول TIME REVERSE 0.5%', price: '390 جنيه', desc: 'محارب فعال للتجاعيد وعلامات التقدم بالعمر.', usage: 'يستخدم تدريجياً مرتين أسبوعياً مساءً.', warnings: 'غير مناسب للحوامل والمرضعات. يجب استخدام واقي شمس.', img: 'https://images.unsplash.com/photo-1620917669809-1af0497965de?auto=format&fit=crop&q=80&w=600' },
+      { id: 'ceramide', cat: 'بشرة', name: 'مرطب السيراميد BARRIER REPAIR', price: '290 جنيه', desc: 'يرمم حاجز البشرة المتضرر.', usage: 'صباحاً ومساءً كخطوة أخيرة.', warnings: 'يحفظ بعيداً عن متناول الأطفال.', img: 'https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&q=80&w=600' },
+      { id: 'hairmask', cat: 'شعر', name: 'ماسك الشعر بالأرجان HAIR THERAPY', price: '320 جنيه', desc: 'علاج مكثف للشعر التالف والمجهد.', usage: 'يترك 15 دقيقة ثم يشطف جيداً.', warnings: 'للاستخدام الخارجي فقط.', img: 'https://images.unsplash.com/photo-1631991645318-25f13fb0c3e1?auto=format&fit=crop&q=80&w=600' },
+      { id: 'shampoo', cat: 'شعر', name: 'شامبو NEMORA المغذي الفاخر', price: '220 جنيه', desc: 'خالي من السلفات، ينظف الشعر بلطف.', usage: 'يوضع على فروة الرأس ويدلك.', warnings: 'تجنب ملامسة العين.', img: 'https://images.unsplash.com/photo-1559599141-3816a0b3f1e3?auto=format&fit=crop&q=80&w=600' },
+      { id: 'hair_oil', cat: 'شعر', name: 'زيت تقوية الجذور GROWTH BOOST', price: '280 جنيه', desc: 'يحفز نمو الشعر ويمنع التساقط.', usage: 'حمام زيت مرتين أسبوعياً.', warnings: 'لا يوضع على فروة ملتهبة.', img: 'https://images.unsplash.com/photo-1615396172061-002f236058e5?auto=format&fit=crop&q=80&w=600' },
+      { id: 'vitc', cat: 'سيروم', name: 'سيروم فيتامين C BRIGHT GLOW', price: '350 جنيه', desc: 'تفتيح ونضارة فورية بتركيز 10%.', usage: 'بضع قطرات مساءً قبل المرطب.', warnings: 'يحفظ في مكان بارد ومظلم لتجنب الأكسدة.', img: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&q=80&w=600' },
+      { id: 'hyaluronic', cat: 'سيروم', name: 'سيروم الهيالورونيك HYDRA BOOST', price: '340 جنيه', desc: 'ترطيب عميق لطبقات الجلد المتعددة.', usage: 'يوضع على بشرة منداة.', warnings: 'للاستخدام الخارجي فقط.', img: 'https://images.unsplash.com/photo-1601049541289-9b1b7abcfe19?auto=format&fit=crop&q=80&w=600' },
+      { id: 'ahabha', cat: 'سيروم', name: 'سيروم التقشير PORE PERFECT AHA/BHA', price: '380 جنيه', desc: 'يحسن ملمس البشرة ويعالج المسام.', usage: 'مرة أسبوعياً لمدة 10 دقائق فقط.', warnings: 'يمنع استخدامه مع مقشرات أخرى. واقي الشمس إلزامي.', img: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&q=80&w=600' },
+      { id: 'bodybutter', cat: 'جسم', name: 'زبدة الجسم بالفانيليا LUXE BODY', price: '260 جنيه', desc: 'ترطيب عميق يدوم 24 ساعة للمناطق الجافة.', usage: 'بعد الاستحمام مباشرة.', warnings: 'لا توضع على الجروح المفتوحة.', img: 'https://images.unsplash.com/photo-1600857062241-98e5dba7214d?auto=format&fit=crop&q=80&w=600' },
+      { id: 'handcream', cat: 'جسم', name: 'كريم اليدين المفتح HAND CARE', price: '120 جنيه', desc: 'يحمي اليدين ويفتح عقل الأصابع.', usage: 'عند الحاجة طوال اليوم.', warnings: 'للاستخدام الخارجي فقط.', img: 'https://images.unsplash.com/photo-1556228021-ab7b9c7db907?auto=format&fit=crop&q=80&w=600' },
+      { id: 'body_scrub', cat: 'جسم', name: 'مقشر القهوة SKIN RENEWAL', price: '230 جنيه', desc: 'ينعم الجلد ويزيل الجلد الميت.', usage: 'يدلك بحركات دائرية على جسم مبلل.', warnings: 'تجنب الفرك القاسي للبشرة الحساسة.', img: 'https://images.unsplash.com/photo-1614859324967-bdf481940763?auto=format&fit=crop&q=80&w=600' },
+      { id: 'body_lotion', cat: 'جسم', name: 'لوشن التفتيح RADIANCE GLOW', price: '250 جنيه', desc: 'يوحد لون الجسم ويترك رائحة جذابة.', usage: 'يومياً بعد الاستحمام.', warnings: 'في حالة حدوث طفح جلدي، توقف عن الاستخدام.', img: 'https://images.unsplash.com/photo-1556229167-73191319759d?auto=format&fit=crop&q=80&w=600' },
+      { id: 'deoro', cat: 'مزيل عرق', name: 'رول أون NEMORA المنعش', price: '140 جنيه', desc: 'حماية 48 ساعة مع تفتيح طبيعي.', usage: 'على بشرة نظيفة وجافة.', warnings: 'لا يستخدم على بشرة ملتهبة.', img: 'https://images.unsplash.com/photo-1594125355630-94965e74e27c?auto=format&fit=crop&w=600' },
+      { id: 'bodysplash', cat: 'جسم', name: 'بادي سبلاش NEMORA FRAGRANCE', price: '200 جنيه', desc: 'عطر منعش يدوم طويلاً.', usage: 'يرش على الجسم من مسافة 15 سم.', warnings: 'قابل للاشتعال. يحفظ بعيداً عن النار.', img: 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=600' }
     ];
+
 
     let cart = JSON.parse(localStorage.getItem('nemoraCart')) || [];
 
@@ -1335,6 +1340,7 @@
       document.getElementById('modal-price').innerText = p.price;
       document.getElementById('modal-desc').innerText = p.desc;
       document.getElementById('modal-usage').innerText = p.usage;
+      document.getElementById('modal-warnings').innerText = p.warnings || 'لا توجد تحذيرات خاصة.';
       document.getElementById('modal-add-btn').onclick = () => { addToCart(p.id); closeModal(); };
       document.getElementById('product-modal').style.display = 'flex';
     }
@@ -1544,11 +1550,12 @@
         const p = PRODS.find(x => x.id === id);
         if (!p) return '';
         return `
-          <div class="product-card" style="padding:1rem; min-height:auto; transform:none; cursor:default; border-radius:12px; background:white; border:1px solid #eee; box-shadow:none;">
+          <div class="product-card" onclick="openModal('${p.id}')" style="padding:1rem; min-height:auto; transform:none; cursor:pointer; border-radius:12px; background:white; border:1px solid #eee; box-shadow:none; transition: all 0.3s;">
             <div class="product-image-container" style="height:100px; margin-bottom:0.5rem;"><img src="${p.img}" style="max-height:100%;"></div>
             <h5 style="font-size:0.85rem; margin:0.3rem 0; height:2.2rem; overflow:hidden;">${p.name}</h5>
             <div style="font-size:0.8rem; font-weight:bold; color:var(--accent-color);">${p.price}</div>
-            <button class="btn-add" onclick="addToCart('${p.id}')" style="padding:0.4rem; font-size:0.7rem; margin-top:0.5rem; width:100%; border-radius:4px;">إضافة</button>
+            <div style="font-size:0.65rem; color:#888; margin-top:0.4rem;"><i class="fa-solid fa-circle-info"></i> اضغط للتفاصيل</div>
+            <button class="btn-add" onclick="event.stopPropagation(); addToCart('${p.id}')" style="padding:0.4rem; font-size:0.7rem; margin-top:0.5rem; width:100%; border-radius:4px;">إضافة</button>
           </div>
         `;
       };
