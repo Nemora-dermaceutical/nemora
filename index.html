@@ -390,62 +390,115 @@
 
     /* Quiz Section */
     .quiz-section { padding: 6rem 5%; max-width: 1100px; margin: 0 auto; }
-    .quiz-card { background: white; padding: 4rem; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.1); text-align: center; }
-    .quiz-card h2 { font-size: 2.5rem; margin-bottom: 2rem; }
-    .quiz-card p { font-size: 1.2rem; margin-bottom: 3rem; }
+    .quiz-card { 
+      background: white; 
+      padding: clamp(2rem, 5vw, 4rem); 
+      border-radius: 24px; 
+      box-shadow: 0 40px 100px rgba(0,0,0,0.08); 
+      text-align: center;
+      border: 1px solid rgba(0,0,0,0.03);
+    }
+    .quiz-card h2 { font-size: clamp(1.8rem, 5vw, 2.8rem); margin-bottom: 1rem; color: var(--accent-color); font-weight: 900; }
+    .quiz-card p { font-size: clamp(1rem, 3vw, 1.2rem); margin-bottom: 3rem; opacity: 0.7; }
     
     .quiz-step { display: none; }
-    .quiz-step h3 { font-size: 1.8rem; margin-bottom: 2rem; }
+    .quiz-step h3 { font-size: clamp(1.4rem, 4vw, 2rem); margin-bottom: 2rem; color: #333; font-weight: 700; }
     
     .quiz-step.active { 
       display: block; 
-      animation: quizFadeIn 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      animation: quizFadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
     @keyframes quizFadeIn {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
     
-    .options { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2.5rem 0; }
+    .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin: 3rem 0; }
     .option-btn { 
-      padding: 2rem 1.5rem; 
-      border: 2px solid #eee; 
-      background: none; 
+      padding: 1.8rem 1.5rem; 
+      border: 2px solid #f0f0f0; 
+      background: #fafafa; 
       cursor: pointer; 
       font-weight: 700; 
-      font-size: 1.2rem;
-      transition: all 0.3s; 
+      font-size: 1.1rem;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); 
       font-family: 'Tajawal', sans-serif;
-      border-radius: 12px;
+      border-radius: 16px;
+      color: #555;
     }
-    .option-btn:hover { border-color: var(--accent-color); background: #f8f8f8; transform: translateY(-3px); }
-    .option-btn.selected { border-color: var(--accent-color); background: var(--accent-color); color: white; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+    .option-btn:hover { 
+      border-color: #e5be81; 
+      background: white; 
+      transform: translateY(-5px); 
+      box-shadow: 0 15px 30px rgba(229, 190, 129, 0.15);
+      color: var(--accent-color);
+    }
+    .option-btn.selected { 
+      border-color: #e5be81; 
+      background: #fdfaf3; 
+      color: #c9a84c; 
+      box-shadow: 0 10px 25px rgba(229, 190, 129, 0.2); 
+    }
     
-    .quiz-nav { display: flex; justify-content: space-between; margin-top: 3rem; gap: 2rem; }
+    .quiz-nav { display: flex; justify-content: center; margin-top: 3.5rem; gap: 1.5rem; }
     .nav-btn { 
-      padding: 1.2rem 3rem; 
+      padding: 1.2rem 3.5rem; 
       border: none; 
       cursor: pointer; 
       font-weight: 900; 
-      font-size: 1.1rem;
+      font-size: 1rem;
       text-transform: uppercase;
       letter-spacing: 1px;
-      transition: all 0.3s;
-      border-radius: 8px;
-      flex: 1;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      border-radius: 50px;
+      min-width: 180px;
     }
     #nextBtn { background: var(--accent-color); color: var(--bg-color); }
-    #nextBtn:hover { background: #333; transform: translateY(-2px); }
-    #prevBtn { background: #f0f0f0; color: #666; }
-    #prevBtn:hover { background: #e0e0e0; }
+    #nextBtn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+    #prevBtn { background: #f5f5f5; color: #888; border: 1px solid #eee; }
+    #prevBtn:hover { background: #eee; color: #444; }
 
-    /* Results */
-    .routine-container { text-align: right; }
-    .routine-phase { margin-bottom: 2rem; }
-    .routine-phase h4 { margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
-    .step-item { background: #f9f9f9; padding: 1rem; margin-bottom: 0.5rem; border-right: 4px solid var(--accent-color); }
-    .step-label { font-size: 0.8rem; color: #666; }
-    .prod-name { font-weight: bold; font-size: 1.1rem; margin: 0.25rem 0; }
+    /* Results Improvement */
+    .routine-container { text-align: center; width: 100%; }
+    .routine-header-title { font-size: clamp(1.5rem, 4vw, 2.2rem); color: var(--accent-color); margin-bottom: 3rem; font-weight: 900; }
+    .routine-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+      gap: 2rem; 
+      margin-bottom: 4rem;
+      direction: rtl;
+    }
+    .routine-column {
+      background: #fcfcfc;
+      padding: clamp(1.5rem, 3vw, 2.5rem);
+      border-radius: 24px;
+      border: 1px solid #f0f0f0;
+      transition: all 0.4s;
+      display: flex;
+      flex-direction: column;
+    }
+    .routine-column:hover { transform: translateY(-8px); box-shadow: 0 30px 60px rgba(0,0,0,0.05); }
+    .routine-column h5 {
+      font-size: 1.6rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .morning-title { color: #d4a017; }
+    .night-title { color: #4a5568; }
+    .routine-prods-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1.2rem;
+    }
+    @media (max-width: 600px) {
+      .routine-prods-grid { grid-template-columns: 1fr 1fr; }
+    }
+
 
     /* Modal Styling */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 2rem; backdrop-filter: blur(5px); }
@@ -1489,48 +1542,50 @@
 
       const getCard = (id) => {
         const p = PRODS.find(x => x.id === id);
+        if (!p) return '';
         return `
-          <div class="product-card" style="padding:1rem; min-height:auto; transform:none; cursor:default;">
-            <div class="product-image-container" style="height:120px;"><img src="${p.img}"></div>
-            <h5 style="font-size:0.9rem; margin:0.5rem 0;">${p.name}</h5>
-            <div style="font-size:0.8rem; font-weight:bold; margin-bottom:0.5rem;">${p.price}</div>
-            <button class="btn-add" onclick="addToCart('${p.id}')" style="padding:0.5rem; font-size:0.7rem;">إضافة</button>
+          <div class="product-card" style="padding:1rem; min-height:auto; transform:none; cursor:default; border-radius:12px; background:white; border:1px solid #eee; box-shadow:none;">
+            <div class="product-image-container" style="height:100px; margin-bottom:0.5rem;"><img src="${p.img}" style="max-height:100%;"></div>
+            <h5 style="font-size:0.85rem; margin:0.3rem 0; height:2.2rem; overflow:hidden;">${p.name}</h5>
+            <div style="font-size:0.8rem; font-weight:bold; color:var(--accent-color);">${p.price}</div>
+            <button class="btn-add" onclick="addToCart('${p.id}')" style="padding:0.4rem; font-size:0.7rem; margin-top:0.5rem; width:100%; border-radius:4px;">إضافة</button>
           </div>
         `;
       };
 
-      const allIds = [...morningIds, ...nightIds];
+      const allIds = [...new Set([...morningIds, ...nightIds])];
 
       resultsDiv.innerHTML = `
-        <div class="routine-container" style="animation: fadeInUp 0.8s ease-out; text-align: right;">
-          <h4 style="font-size: 2rem; color: var(--accent-color); margin-bottom: 2.5rem; text-align:center;">✨ روتينك الطبي المكتمل من نيمورا:</h4>
+        <div class="routine-container" style="animation: fadeInUp 1s cubic-bezier(0.2, 0.8, 0.2, 1);">
+          <h4 class="routine-header-title">✨ روتينك الطبي المكتمل من نيمورا:</h4>
           
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;">
-            <div>
-              <h5 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #f39c12; border-right: 4px solid #f39c12; padding-right: 1rem;">☀️ الروتين الصباحي</h5>
-              <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem;">
+          <div class="routine-grid">
+            <div class="routine-column">
+              <h5 class="morning-title"><i class="fa-solid fa-sun"></i> الروتين الصباحي</h5>
+              <div class="routine-prods-grid">
                 ${morningIds.map(id => getCard(id)).join('')}
               </div>
             </div>
             
-            <div>
-              <h5 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #9b59b6; border-right: 4px solid #9b59b6; padding-right: 1rem;">🌙 الروتين المسائي</h5>
-              <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem;">
+            <div class="routine-column">
+              <h5 class="night-title"><i class="fa-solid fa-moon"></i> الروتين المسائي</h5>
+              <div class="routine-prods-grid">
                 ${nightIds.map(id => getCard(id)).join('')}
               </div>
             </div>
           </div>
           
-          <div style="margin-top: 4rem; display: flex; flex-direction: column; align-items: center; gap: 1.5rem;">
-            <button onclick='addRoutineToCart(${JSON.stringify(allIds)})' class="cta-btn" style="width: 100%; max-width: 500px; background: #25D366; color: white;">إضافة الروتين بالكامل للسلة <i class="fa-solid fa-cart-plus"></i></button>
-            <div style="display: flex; gap: 1rem;">
-              <button onclick="location.reload()" class="nav-btn" style="background:#eee; color:#333; flex:none; padding: 1rem 2rem;">إعادة الاختبار</button>
-              <button onclick="switchView('shop')" class="nav-btn" style="flex:none; padding: 1rem 2rem;">تسوق كافة المنتجات</button>
+          <div style="margin-top: 2rem; display: flex; flex-direction: column; align-items: center; gap: 1.5rem;">
+            <button onclick='addRoutineToCart(${JSON.stringify(allIds)})' class="cta-btn" style="width: 100%; max-width: 500px; background: #25D366; color: white; border-radius: 50px;">إضافة الروتين بالكامل للسلة <i class="fa-solid fa-cart-plus"></i></button>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+              <button onclick="location.reload()" class="nav-btn" style="background:#f5f5f5; color:#666; flex:none; padding: 1rem 2rem; min-width: 150px;">إعادة الاختبار</button>
+              <button onclick="switchView('shop')" class="nav-btn" style="flex:none; padding: 1rem 2rem; min-width: 150px;">تسوق كافة المنتجات</button>
             </div>
           </div>
         </div>
       `;
     }
+
 
     // UI LOGIC
     function checkReveal() {
