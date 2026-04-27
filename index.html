@@ -2226,6 +2226,13 @@
         <div id="bundles-admin-list"></div>
       </div>
     </div>
+
+    <!-- Shortcut to Skin Test -->
+    <div class="admin-section" style="margin-top: 2rem; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 1.5rem;">
+      <button class="btn-admin" onclick="toggleAdminPanel(); goToSection('quiz');" style="width: 100%; background: #e5be81; color: #111; font-weight: 900;">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> اختبار البشرة (عرض مباشر)
+      </button>
+    </div>
   </div>
   <!-- Bottom Navigation (Mobile) -->
   <nav class="bottom-nav">
@@ -2236,6 +2243,10 @@
     <a onclick="switchView('shop')" class="bottom-nav-item" id="bnav-shop">
       <i class="fa-solid fa-bag-shopping"></i>
       <span>المتجر</span>
+    </a>
+    <a onclick="goToSection('quiz')" class="bottom-nav-item" id="bnav-quiz">
+      <i class="fa-solid fa-wand-magic-sparkles"></i>
+      <span>الاختبار</span>
     </a>
     <a onclick="switchView('bundles')" class="bottom-nav-item" id="bnav-bundles">
       <i class="fa-solid fa-layer-group"></i>
