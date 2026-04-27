@@ -281,8 +281,6 @@
     }
 
     /* Views */
-    .view-section { display: none; animation: fadeIn 0.5s ease-out; }
-    .view-section.active { display: block; }
 
     /* Hero Section */
     .hero {
@@ -864,6 +862,76 @@
       .bundles-stats { gap: 1.5rem; }
     }
 
+    /* Mobile Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 75px;
+      background: rgba(227, 213, 193, 0.95);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-top: 1px solid rgba(0,0,0,0.1);
+      display: none;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 2500;
+      padding-bottom: env(safe-area-inset-bottom);
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
+    }
+    @media (max-width: 768px) {
+      .bottom-nav { display: flex; }
+      body { padding-bottom: 80px; }
+    }
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 0.7rem;
+      font-weight: 900;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      flex: 1;
+      opacity: 0.4;
+      font-family: 'Tajawal', sans-serif;
+    }
+    .bottom-nav-item i { font-size: 1.4rem; transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1); }
+    .bottom-nav-item.active { 
+      opacity: 1; 
+      color: var(--accent-color);
+    }
+    .bottom-nav-item.active i { transform: translateY(-5px) scale(1.1); }
+    .bottom-nav-item.active span { font-weight: 900; }
+
+    /* Improved Section Transitions */
+    .view-section { 
+      display: none; 
+    }
+    @keyframes sectionIn {
+      from { opacity: 0; transform: translateY(15px) scale(0.99); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .view-section.active { 
+      display: block; 
+      animation: sectionIn 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    }
+
+    /* Mobile Grid Refinement */
+    @media (max-width: 500px) {
+      .product-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; padding: 1rem 0; }
+      .product-card { padding: 1rem; border-radius: 12px; }
+      .product-image-container { height: 140px; margin-bottom: 1rem; }
+      .product-name { font-size: 0.9rem; line-height: 1.3; height: 2.6rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; }
+      .product-price { font-size: 0.95rem; margin-bottom: 0.8rem; }
+      .card-actions { flex-direction: column; }
+      .btn-add { font-size: 0.75rem; padding: 0.7rem; order: 1; }
+      .btn-details { width: 100%; height: 35px; order: 2; }
+    }
   </style>
 </head>
 <body>
@@ -928,8 +996,8 @@
   <main id="home-view" class="view-section active">
     <section class="hero reveal">
       <div class="hero-content">
-        <h1>العناية بالبشرة كما يجب أن تكون</h1>
-        <p>اكتشفي مجموعة نيمورا الطبية المتطورة، المصممة خصيصاً لجمال بشرتك وصحتها بأعلى معايير الجودة العالمية.</p>
+        <h1 style="font-size: clamp(2.2rem, 8vw, 4.5rem);">العناية بالبشرة كما يجب أن تكون</h1>
+        <p style="font-size: clamp(1rem, 4vw, 1.3rem); margin-bottom: 2.5rem;">اكتشفي مجموعة نيمورا الطبية المتطورة، المصممة خصيصاً لجمال بشرتك وصحتها بأعلى معايير الجودة العالمية.</p>
         <a onclick="switchView('shop')" class="cta-btn">تسوقي الآن</a>
       </div>
     </section>
@@ -1162,17 +1230,27 @@
     // VIEW SWITCHER
     function switchView(view) {
       document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-      document.getElementById(`${view}-view`).classList.add('active');
+      const viewEl = document.getElementById(`${view}-view`);
+      if (viewEl) {
+        viewEl.classList.add('active');
+      }
       
-      document.getElementById('nav-home').classList.toggle('active', view === 'home');
-      document.getElementById('nav-shop').classList.toggle('active', view === 'shop');
-      document.getElementById('nav-bundles').classList.toggle('active', view === 'bundles');
+      // Desktop Nav
+      if(document.getElementById('nav-home')) document.getElementById('nav-home').classList.toggle('active', view === 'home');
+      if(document.getElementById('nav-shop')) document.getElementById('nav-shop').classList.toggle('active', view === 'shop');
+      if(document.getElementById('nav-bundles')) document.getElementById('nav-bundles').classList.toggle('active', view === 'bundles');
+      
+      // Mobile Bottom Nav
+      document.querySelectorAll('.bottom-nav-item').forEach(item => item.classList.remove('active'));
+      const bnavItem = document.getElementById(`bnav-${view}`);
+      if(bnavItem) bnavItem.classList.add('active');
       
       if (view === 'bundles') renderBundles();
       
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       document.querySelectorAll('.reveal').forEach(el => el.classList.remove('active'));
-      setTimeout(checkReveal, 100);
+      setTimeout(checkReveal, 400);
+      closeMobileMenu();
     }
 
     // PRODUCT RENDERING
@@ -1180,11 +1258,12 @@
       const grid = document.getElementById('product-grid');
       grid.innerHTML = '';
       const filtered = filter === 'الكل' ? PRODS : PRODS.filter(p => p.cat === filter);
-      filtered.forEach(p => {
+      filtered.forEach((p, idx) => {
         const card = document.createElement('div');
-        card.className = 'product-card';
+        card.className = 'product-card reveal';
+        card.style.transitionDelay = `${idx * 0.05}s`;
         card.innerHTML = `
-          <div class="product-image-container"><img src="${p.img}" alt="${p.name}"></div>
+          <div class="product-image-container"><img src="${p.img}" alt="${p.name}" onerror="this.src='https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&q=80&w=400'"></div>
           <div class="product-cat">${p.cat}</div>
           <h3 class="product-name">${p.name}</h3>
           <div class="product-price">${p.price}</div>
@@ -1195,6 +1274,7 @@
         `;
         grid.appendChild(card);
       });
+      setTimeout(checkReveal, 100);
     }
 
     function filterProducts(cat) {
@@ -1337,13 +1417,17 @@
     let quizData = { skin: '', goals: [], problems: [], age: '' };
 
     function goToSection(id) {
-      if (document.getElementById('shop-view').classList.contains('active')) {
+      if (!document.getElementById('home-view').classList.contains('active')) {
         switchView('home');
-      }
-      setTimeout(() => {
+        setTimeout(() => {
+          const el = document.getElementById(id);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 600);
+      } else {
         const el = document.getElementById(id);
         if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
+      }
+      closeMobileMenu();
     }
 
     function selectOption(s, v) {
@@ -1771,7 +1855,7 @@
         const delay = idx * 0.1;
 
         return `
-          <div class="bundle-card-new" style="animation-delay: ${delay}s">
+          <div class="bundle-card-new reveal" style="animation-delay: ${delay}s">
             <div class="bundle-img-area">
               ${bundle.badge ? `<div class="bundle-badge-new ${badgeClass}">${bundle.badge}</div>` : ''}
               <div class="bundle-imgs-collage">
@@ -2080,5 +2164,25 @@
       </div>
     </div>
   </div>
+  <!-- Bottom Navigation (Mobile) -->
+  <nav class="bottom-nav">
+    <a onclick="switchView('home')" class="bottom-nav-item active" id="bnav-home">
+      <i class="fa-solid fa-house"></i>
+      <span>الرئيسية</span>
+    </a>
+    <a onclick="switchView('shop')" class="bottom-nav-item" id="bnav-shop">
+      <i class="fa-solid fa-bag-shopping"></i>
+      <span>المتجر</span>
+    </a>
+    <a onclick="switchView('bundles')" class="bottom-nav-item" id="bnav-bundles">
+      <i class="fa-solid fa-layer-group"></i>
+      <span>العروض</span>
+    </a>
+    <a onclick="toggleCart()" class="bottom-nav-item" id="bnav-cart">
+      <i class="fa-solid fa-cart-shopping"></i>
+      <span>السلة</span>
+    </a>
+  </nav>
+
 </body>
 </html>
