@@ -996,6 +996,9 @@
       .btn-details { width: 100%; height: 35px; order: 2; }
     }
   </style>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 </head>
 <body>
 
@@ -1262,7 +1265,21 @@
   <div id="toast">تمت الإضافة إلى السلة!</div>
 
   <script>
-    const PRODS = [
+    // Firebase Initialization
+    const firebaseConfig = {
+      apiKey: "AIzaSyB064AYD6bcr1CkoFwfLxlZ988-R8eyJyU",
+      authDomain: "nemora-135fb.firebaseapp.com",
+      projectId: "nemora-135fb",
+      storageBucket: "nemora-135fb.firebasestorage.app",
+      messagingSenderId: "499452007703",
+      appId: "1:499452007703:web:4e3b99deac4482c137d352",
+      measurementId: "G-S2D37Y3731",
+      databaseURL: "https://nemora-135fb-default-rtdb.firebaseio.com/"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let PRODS = [
       { id: 'sunblock', cat: 'بشرة', name: 'واقي شمس NEMORA SPF 50+', price: '280 جنيه', desc: 'حماية فائقة من أشعة الشمس UVA/UVB، لا يترك أثراً دهنياً.', usage: 'يوضع قبل التعرض بـ 20 دقيقة.', warnings: 'للاستخدام الخارجي فقط. تجنب ملامسة العين.', img: 'https://images.unsplash.com/photo-1552083974-5fefe8c9ef14?auto=format&fit=crop&q=80&w=600' },
       { id: 'facewash', cat: 'بشرة', name: 'غسول الوجه الهيدراتينج', price: '190 جنيه', desc: 'ينظف بعمق ويرطب بالألوفيرا وماء البامبو.', usage: 'يدلك على بشرة مبللة صباحاً ومساءً.', warnings: 'في حالة حدوث تهيج، توقف عن الاستخدام.', img: 'https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&q=80&w=600' },
       { id: 'micellar', cat: 'بشرة', name: 'ماء ميسيلار منظف', price: '160 جنيه', desc: 'يزيل المكياج والشوائب بلطف دون الحاجة للشطف.', usage: 'يوضع على قطعة قطن ويمسح بها الوجه.', warnings: 'تجنب ملامسة العين مباشرة.', img: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&q=80&w=600' },
@@ -1622,9 +1639,29 @@
     });
     document.getElementById('backToTop').onclick = () => window.scrollTo({top:0, behavior:'smooth'});
 
-    // ========== ADMIN SYSTEM ==========
+    // ========== ADMIN SYSTEM & CLOUD SYNC ==========
     let adminEmail = localStorage.getItem('adminEmail');
-    let coupons = JSON.parse(localStorage.getItem('coupons')) || [];
+    let coupons = [];
+
+    // Sync Coupons from Firebase
+    db.ref('coupons').on('value', (snapshot) => {
+      const data = snapshot.val();
+      coupons = data ? Object.values(data) : [];
+      if(document.getElementById('adminPanel')?.classList.contains('active')) loadCouponsList();
+    });
+
+    // Sync Products from Firebase
+    db.ref('products').on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        PRODS = Object.values(data);
+        renderProducts();
+        if(adminEmail) loadProductList();
+      } else {
+        // Initial Upload to Firebase if empty (Migration)
+        db.ref('products').set(PRODS);
+      }
+    });
 
     function openLoginModal() {
       document.getElementById('loginModal').classList.add('active');
@@ -1744,9 +1781,10 @@
         product.desc = document.getElementById('product-desc').value;
         product.img = document.getElementById('product-image').value;
         
-        localStorage.setItem('productsData', JSON.stringify(PRODS));
+        // Sync to Firebase
+        db.ref('products').set(PRODS);
         renderProducts();
-        showToast('✅ تم حفظ التعديلات!');
+        showToast('✅ تم حفظ التعديلات سحابياً!');
       }
     }
 
@@ -1759,21 +1797,24 @@
       if(coupons.find(c => c.code === code)) return alert('هذا الكوبون موجود بالفعل');
       
       coupons.push({code, discount: parseInt(discount)});
-      localStorage.setItem('coupons', JSON.stringify(coupons));
+      
+      // Sync to Firebase
+      db.ref('coupons').set(coupons);
       
       document.getElementById('coupon-code').value = '';
       document.getElementById('coupon-discount').value = '';
       
       loadCouponsList();
-      showToast('✅ تم إضافة الكوبون!');
+      showToast('✅ تم إضافة الكوبون سحابياً!');
     }
 
     function deleteCoupon(code) {
       if(confirm('هل تريد حذف هذا الكوبون؟')) {
         coupons = coupons.filter(c => c.code !== code);
-        localStorage.setItem('coupons', JSON.stringify(coupons));
+        // Sync to Firebase
+        db.ref('coupons').set(coupons);
         loadCouponsList();
-        showToast('✅ تم حذف الكوبون!');
+        showToast('✅ تم حذف الكوبون سحابياً!');
       }
     }
 
@@ -1836,16 +1877,23 @@
       }
     ];
 
-    // Clear old bundle format if it lacks cat field
-    let _storedBundles = JSON.parse(localStorage.getItem('nemora_bundles'));
-    if (_storedBundles && _storedBundles.length > 0 && _storedBundles[0].cat === undefined) {
-      localStorage.removeItem('nemora_bundles');
-      _storedBundles = null;
-    }
-    let bundles = _storedBundles || DEFAULT_BUNDLES;
+    let bundles = [];
+
+    // Sync Bundles from Firebase
+    db.ref('bundles').on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        bundles = Object.values(data);
+        renderBundles();
+        if(adminEmail) loadBundlesAdmin();
+      } else {
+        // Initial Upload
+        db.ref('bundles').set(DEFAULT_BUNDLES);
+      }
+    });
 
     function saveBundles() {
-      localStorage.setItem('nemora_bundles', JSON.stringify(bundles));
+      db.ref('bundles').set(bundles);
     }
 
     function getBundlePrice(bundle) {
@@ -2019,7 +2067,7 @@
         saveBundles();
         loadBundlesAdmin();
         renderBundles();
-        showToast('✅ تم حذف الباندل');
+        showToast('✅ تم حذف الباندل سحابياً');
         resetBundleForm();
       }
     }
@@ -2087,16 +2135,6 @@
     updateCart();
     checkReveal();
     updateAdminUI();
-    
-    // Load saved products from localStorage
-    const savedProducts = localStorage.getItem('productsData');
-    if(savedProducts) {
-      const saved = JSON.parse(savedProducts);
-      saved.forEach((sp, i) => {
-        if(PRODS[i]) Object.assign(PRODS[i], sp);
-      });
-      renderProducts();
-    }
   </script>
 
   <!-- Login Modal -->
