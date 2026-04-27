@@ -1013,7 +1013,7 @@
       <a onclick="switchView('home')" id="nav-home">الرئيسية</a>
       <a onclick="switchView('shop')" id="nav-shop">المتجر</a>
       <a onclick="switchView('bundles')" id="nav-bundles">الباندلز</a>
-      <a onclick="goToSection('quiz')">اختبار البشرة</a>
+      <a onclick="switchView('quiz')" id="nav-quiz">اختبار البشرة</a>
       <a onclick="goToSection('footer')">تواصل معنا</a>
     </nav>
     <div class="header-icons">
@@ -1041,7 +1041,7 @@
       <a onclick="switchView('home'); closeMobileMenu()">🏠 الرئيسية</a>
       <a onclick="switchView('shop'); closeMobileMenu()">🛍️ المتجر</a>
       <a onclick="switchView('bundles'); closeMobileMenu()">🎁 الباندلز</a>
-      <a onclick="goToSection('quiz'); closeMobileMenu()">✨ اختبار البشرة</a>
+      <a onclick="switchView('quiz'); closeMobileMenu()">✨ اختبار البشرة</a>
       <a onclick="goToSection('footer'); closeMobileMenu()">📞 تواصل معنا</a>
     </nav>
   </div>
@@ -1055,8 +1055,60 @@
         <a onclick="switchView('shop')" class="cta-btn">تسوقي الآن</a>
       </div>
     </section>
+  </main>
 
-    <section class="quiz-section reveal" id="quiz">
+  <!-- SHOP VIEW -->
+  <main id="shop-view" class="view-section">
+    <div class="shop-container">
+      <div class="shop-header reveal">
+        <h1>مجموعة NEMORA الكاملة</h1>
+        <p>عناية احترافية لبشرتك وشعرك، مستوحاة من الطبيعة ومعززة بالعلم</p>
+      </div>
+
+      <div class="category-filters reveal">
+        <button class="filter-btn active" onclick="filterProducts('الكل')">الكل</button>
+        <button class="filter-btn" onclick="filterProducts('بشرة')">بشرة</button>
+        <button class="filter-btn" onclick="filterProducts('شعر')">شعر</button>
+        <button class="filter-btn" onclick="filterProducts('جسم')">جسم</button>
+        <button class="filter-btn" onclick="filterProducts('سيروم')">سيروم</button>
+      </div>
+
+      <div class="product-grid reveal" id="product-grid">
+        <!-- Products injected here -->
+      </div>
+    </div>
+  </main>
+
+  <!-- BUNDLES VIEW -->
+  <main id="bundles-view" class="view-section">
+    <!-- Hero Banner -->
+    <div class="bundles-hero">
+      <div class="bundles-hero-content">
+        <div class="bundles-hero-tag">✦ عروض حصرية ✦</div>
+        <h1>باندلز <span>نيمورا</span><br>المميزة</h1>
+        <p>وفري أكثر واحصلي على روتين متكامل بسعر استثنائي، مجموعات مختارة بعناية لكل احتياجاتك</p>
+        <div class="bundles-stats" id="bundles-stats">
+          <!-- injected by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="bundles-filters" id="bundles-filters">
+      <button class="bundle-filter-btn active" onclick="filterBundles('all', this)">الكل</button>
+    </div>
+
+    <!-- Grid -->
+    <div class="bundles-container">
+      <div class="bundles-grid-new" id="bundles-grid">
+        <!-- Bundles injected here -->
+      </div>
+    </div>
+  </main>
+
+  <!-- QUIZ VIEW -->
+  <main id="quiz-view" class="view-section">
+    <section class="quiz-section" id="quiz">
       <div class="quiz-card">
         <h2 style="margin-bottom:1rem; font-family:'Tajawal', sans-serif;">اختبار روتينك المثالي</h2>
         <p id="res-text">أجب على 4 أسئلة سريعة لنحدد لك الروتين المناسب لبشرتك.</p>
@@ -1112,55 +1164,6 @@
     </section>
   </main>
 
-  <!-- SHOP VIEW -->
-  <main id="shop-view" class="view-section">
-    <div class="shop-container">
-      <div class="shop-header reveal">
-        <h1>مجموعة NEMORA الكاملة</h1>
-        <p>عناية احترافية لبشرتك وشعرك، مستوحاة من الطبيعة ومعززة بالعلم</p>
-      </div>
-
-      <div class="category-filters reveal">
-        <button class="filter-btn active" onclick="filterProducts('الكل')">الكل</button>
-        <button class="filter-btn" onclick="filterProducts('بشرة')">بشرة</button>
-        <button class="filter-btn" onclick="filterProducts('شعر')">شعر</button>
-        <button class="filter-btn" onclick="filterProducts('جسم')">جسم</button>
-        <button class="filter-btn" onclick="filterProducts('سيروم')">سيروم</button>
-      </div>
-
-      <div class="product-grid reveal" id="product-grid">
-        <!-- Products injected here -->
-      </div>
-    </div>
-  </main>
-
-  <!-- BUNDLES VIEW -->
-  <main id="bundles-view" class="view-section">
-    <!-- Hero Banner -->
-    <div class="bundles-hero">
-      <div class="bundles-hero-content">
-        <div class="bundles-hero-tag">✦ عروض حصرية ✦</div>
-        <h1>باندلز <span>نيمورا</span><br>المميزة</h1>
-        <p>وفري أكثر واحصلي على روتين متكامل بسعر استثنائي، مجموعات مختارة بعناية لكل احتياجاتك</p>
-        <div class="bundles-stats" id="bundles-stats">
-          <!-- injected by JS -->
-        </div>
-      </div>
-    </div>
-
-    <!-- Filter Tabs -->
-    <div class="bundles-filters" id="bundles-filters">
-      <button class="bundle-filter-btn active" onclick="filterBundles('all', this)">الكل</button>
-    </div>
-
-    <!-- Grid -->
-    <div class="bundles-container">
-      <div class="bundles-grid-new" id="bundles-grid">
-        <!-- Bundles injected here -->
-      </div>
-    </div>
-  </main>
-
   <footer class="site-footer" id="footer">
     <div class="footer-container">
       <div class="footer-section">
@@ -1176,7 +1179,7 @@
         <h3>روابط سريعة</h3>
         <p><a onclick="switchView('home')" style="cursor:pointer;">الرئيسية</a></p>
         <p><a onclick="switchView('shop')" style="cursor:pointer;">المتجر</a></p>
-        <p><a href="#quiz">اختبار البشرة</a></p>
+        <p><a onclick="switchView('quiz')" style="cursor:pointer;">اختبار البشرة</a></p>
       </div>
       <div class="footer-section">
         <h3>تواصل معنا</h3>
@@ -1298,6 +1301,7 @@
       if(document.getElementById('nav-home')) document.getElementById('nav-home').classList.toggle('active', view === 'home');
       if(document.getElementById('nav-shop')) document.getElementById('nav-shop').classList.toggle('active', view === 'shop');
       if(document.getElementById('nav-bundles')) document.getElementById('nav-bundles').classList.toggle('active', view === 'bundles');
+      if(document.getElementById('nav-quiz')) document.getElementById('nav-quiz').classList.toggle('active', view === 'quiz');
       
       // Mobile Bottom Nav
       document.querySelectorAll('.bottom-nav-item').forEach(item => item.classList.remove('active'));
@@ -2229,7 +2233,7 @@
 
     <!-- Shortcut to Skin Test -->
     <div class="admin-section" style="margin-top: 2rem; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 1.5rem;">
-      <button class="btn-admin" onclick="toggleAdminPanel(); goToSection('quiz');" style="width: 100%; background: #e5be81; color: #111; font-weight: 900;">
+      <button class="btn-admin" onclick="toggleAdminPanel(); switchView('quiz');" style="width: 100%; background: #e5be81; color: #111; font-weight: 900;">
         <i class="fa-solid fa-wand-magic-sparkles"></i> اختبار البشرة (عرض مباشر)
       </button>
     </div>
@@ -2244,7 +2248,7 @@
       <i class="fa-solid fa-bag-shopping"></i>
       <span>المتجر</span>
     </a>
-    <a onclick="goToSection('quiz')" class="bottom-nav-item" id="bnav-quiz">
+    <a onclick="switchView('quiz')" class="bottom-nav-item" id="bnav-quiz">
       <i class="fa-solid fa-wand-magic-sparkles"></i>
       <span>الاختبار</span>
     </a>
