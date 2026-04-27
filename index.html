@@ -1441,6 +1441,7 @@
     function applyPromo() {
       const code = document.getElementById('promo-input').value.trim().toUpperCase();
       const msgEl = document.getElementById('promo-msg');
+      const total = cart.reduce((s, i) => s + parseInt(i.price) * i.qty, 0);
       
       if (!code) {
         msgEl.style.color = '#ff4444';
@@ -1451,10 +1452,27 @@
       const coupon = coupons.find(c => c.code === code);
       if (!coupon) {
         msgEl.style.color = '#ff4444';
-        msgEl.innerText = '❌ كود الخصم غير صحيح أو منتهي';
+        msgEl.innerText = '❌ كود الخصم غير صحيح';
         appliedPromo = null;
-        document.getElementById('discount-row').style.display = 'none';
-        document.getElementById('final-row').style.display = 'none';
+        updateCartTotals();
+        return;
+      }
+
+      // التحقق من عدد مرات الاستخدام
+      if (coupon.limit && (coupon.usageCount || 0) >= coupon.limit) {
+        msgEl.style.color = '#ff4444';
+        msgEl.innerText = '❌ عذراً، هذا الكوبون وصل للحد الأقصى للاستخدام';
+        appliedPromo = null;
+        updateCartTotals();
+        return;
+      }
+
+      // التحقق من الحد الأدنى للشراء
+      if (coupon.minPurchase && total < coupon.minPurchase) {
+        msgEl.style.color = '#ff4444';
+        msgEl.innerText = `❌ الحد الأدنى لاستخدام الكوبون هو ${coupon.minPurchase} جنيه`;
+        appliedPromo = null;
+        updateCartTotals();
         return;
       }
 
@@ -1485,12 +1503,23 @@
     function checkoutWhatsApp() {
       const total = cart.reduce((s, i) => s + parseInt(i.price) * i.qty, 0);
       let msg = "أود طلب:\n" + cart.map(i => `- ${i.name} x${i.qty}`).join('\n');
+      
       if (appliedPromo) {
         const discountAmt = Math.round(total * appliedPromo.discount / 100);
         const finalAmt = total - discountAmt;
         msg += `\n\nكود الخصم: ${appliedPromo.code} (${appliedPromo.discount}%)`;
         msg += `\nالإجمالي بعد الخصم: ${finalAmt} جنيه`;
+
+        // زيادة عدد مرات استخدام الكوبون سحابياً
+        const cIdx = coupons.findIndex(c => c.code === appliedPromo.code);
+        if (cIdx > -1) {
+          coupons[cIdx].usageCount = (coupons[cIdx].usageCount || 0) + 1;
+          db.ref('coupons').set(coupons);
+        }
+      } else {
+        msg += `\n\nالإجمالي: ${total} جنيه`;
       }
+      
       window.open(`https://wa.me/201282758854?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
@@ -1791,18 +1820,28 @@
     function addCoupon() {
       const code = document.getElementById('coupon-code').value.trim().toUpperCase();
       const discount = document.getElementById('coupon-discount').value;
+      const limit = document.getElementById('coupon-limit').value;
+      const minPurchase = document.getElementById('coupon-min').value;
       
-      if(!code || !discount) return alert('الرجاء ملء جميع الحقول');
+      if(!code || !discount) return alert('الرجاء ملء الحقول الأساسية');
       
       if(coupons.find(c => c.code === code)) return alert('هذا الكوبون موجود بالفعل');
       
-      coupons.push({code, discount: parseInt(discount)});
+      coupons.push({
+        code, 
+        discount: parseInt(discount), 
+        limit: limit ? parseInt(limit) : null,
+        minPurchase: minPurchase ? parseInt(minPurchase) : 0,
+        usageCount: 0
+      });
       
       // Sync to Firebase
       db.ref('coupons').set(coupons);
       
       document.getElementById('coupon-code').value = '';
       document.getElementById('coupon-discount').value = '';
+      document.getElementById('coupon-limit').value = '';
+      document.getElementById('coupon-min').value = '';
       
       loadCouponsList();
       showToast('✅ تم إضافة الكوبون سحابياً!');
@@ -1829,7 +1868,8 @@
         <div class="coupon-item">
           <div class="coupon-info">
             <div class="coupon-code">${c.code}</div>
-            <div class="coupon-discount">خصم: ${c.discount}%</div>
+            <div class="coupon-discount">خصم: ${c.discount}% ${c.minPurchase > 0 ? `| أدنى شراء: ${c.minPurchase}` : ''}</div>
+            <div style="font-size:0.75rem; color:#666; margin-top:0.25rem;">الاستخدام: ${c.usageCount || 0} / ${c.limit || '∞'}</div>
           </div>
           <button class="btn-admin btn-danger btn-sm" onclick="deleteCoupon('${c.code}')">حذف</button>
         </div>
@@ -2211,6 +2251,16 @@
         <div class="form-group">
           <label>نسبة الخصم (%):</label>
           <input type="number" id="coupon-discount" placeholder="20" min="1" max="100" />
+        </div>
+
+        <div class="form-group">
+          <label>عدد مرات الاستخدام (اختياري):</label>
+          <input type="number" id="coupon-limit" placeholder="مثلاً: 10 لأول عشرة عملاء" />
+        </div>
+
+        <div class="form-group">
+          <label>الحد الأدنى للشراء بالجنيه (اختياري):</label>
+          <input type="number" id="coupon-min" placeholder="مثلاً: 500" />
         </div>
         
         <button class="btn-admin" onclick="addCoupon()">➕ إضافة كوبون</button>
