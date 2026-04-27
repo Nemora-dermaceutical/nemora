@@ -496,6 +496,374 @@
     /* Toast */
     #toast { position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; padding: 1rem 2rem; border-radius: 8px; font-weight: bold; transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 4000; }
     #toast.show { transform: translateY(0); opacity: 1; }
+
+    /* ===== PREMIUM BUNDLES SYSTEM ===== */
+    @keyframes bundleFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    @keyframes badgePulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,59,48,0.4); }
+      50% { transform: scale(1.05); box-shadow: 0 0 0 8px rgba(255,59,48,0); }
+    }
+    @keyframes countUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideInCard {
+      from { opacity: 0; transform: translateY(50px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(229,190,129,0.3); }
+      50% { box-shadow: 0 0 40px rgba(229,190,129,0.6); }
+    }
+
+    /* Hero Banner */
+    .bundles-hero {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+      padding: 5rem 5%;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .bundles-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 50%, rgba(229,190,129,0.15) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 50%, rgba(229,190,129,0.1) 0%, transparent 60%);
+    }
+    .bundles-hero-content { position: relative; z-index: 1; }
+    .bundles-hero-tag {
+      display: inline-block;
+      background: linear-gradient(90deg, #e5be81, #c9a84c, #e5be81);
+      background-size: 200% auto;
+      animation: shimmer 3s linear infinite;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 0.85rem;
+      font-weight: 900;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .bundles-hero h1 {
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      font-weight: 900;
+      color: white;
+      font-family: 'Tajawal', sans-serif;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+    .bundles-hero h1 span {
+      background: linear-gradient(90deg, #e5be81, #f5d68a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .bundles-hero p {
+      color: rgba(255,255,255,0.7);
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+    .bundles-stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+    .bundle-stat {
+      text-align: center;
+      color: white;
+    }
+    .bundle-stat-num {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #e5be81;
+      display: block;
+      animation: countUp 0.6s ease-out;
+    }
+    .bundle-stat-label {
+      font-size: 0.85rem;
+      opacity: 0.6;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Filter Tabs */
+    .bundles-filters {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      padding: 2.5rem 5% 0;
+      flex-wrap: wrap;
+    }
+    .bundle-filter-btn {
+      padding: 0.6rem 1.5rem;
+      border: 2px solid rgba(0,0,0,0.15);
+      background: transparent;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Tajawal', sans-serif;
+      color: var(--text-color);
+    }
+    .bundle-filter-btn.active,
+    .bundle-filter-btn:hover {
+      background: var(--accent-color);
+      color: var(--bg-color);
+      border-color: var(--accent-color);
+      transform: translateY(-2px);
+    }
+
+    /* Grid */
+    .bundles-container {
+      padding: 3rem 5% 5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .bundles-grid-new {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 2.5rem;
+    }
+
+    /* Card */
+    .bundle-card-new {
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      animation: slideInCard 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
+    }
+    .bundle-card-new:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+    }
+
+    /* Card Image Area */
+    .bundle-img-area {
+      position: relative;
+      height: 240px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #f8f3eb 0%, #ede0cc 100%);
+    }
+    .bundle-imgs-collage {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bundle-img-main {
+      width: 130px;
+      height: 130px;
+      object-fit: contain;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -55%);
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
+      transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      z-index: 3;
+    }
+    .bundle-img-side1 {
+      width: 85px;
+      height: 85px;
+      object-fit: contain;
+      position: absolute;
+      top: 50%;
+      right: 12%;
+      transform: translate(0, -40%) rotate(8deg);
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.1));
+      transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      z-index: 2;
+      opacity: 0.9;
+    }
+    .bundle-img-side2 {
+      width: 75px;
+      height: 75px;
+      object-fit: contain;
+      position: absolute;
+      top: 50%;
+      left: 12%;
+      transform: translate(0, -40%) rotate(-8deg);
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.1));
+      transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      z-index: 2;
+      opacity: 0.85;
+    }
+    .bundle-card-new:hover .bundle-img-main { transform: translate(-50%, -62%) scale(1.08); }
+    .bundle-card-new:hover .bundle-img-side1 { transform: translate(8px, -45%) rotate(12deg); }
+    .bundle-card-new:hover .bundle-img-side2 { transform: translate(-8px, -45%) rotate(-12deg); }
+
+    /* Overlay gradient on image */
+    .bundle-img-area::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 80px;
+      background: linear-gradient(transparent, white);
+      z-index: 4;
+    }
+
+    /* Badge */
+    .bundle-badge-new {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: #ff3b30;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 900;
+      padding: 0.35rem 0.9rem;
+      border-radius: 20px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      z-index: 10;
+      animation: badgePulse 2s ease-in-out infinite;
+    }
+    .bundle-badge-new.gold {
+      background: linear-gradient(135deg, #e5be81, #c9a84c);
+      animation: glowPulse 2s ease-in-out infinite;
+    }
+
+    /* Card Body */
+    .bundle-body {
+      padding: 1.5rem 1.8rem 1.8rem;
+    }
+    .bundle-cat-tag {
+      font-size: 0.7rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #c9a84c;
+      margin-bottom: 0.4rem;
+    }
+    .bundle-title {
+      font-size: 1.35rem;
+      font-weight: 900;
+      font-family: 'Tajawal', sans-serif;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+    }
+    .bundle-subtitle {
+      font-size: 0.9rem;
+      color: #888;
+      margin-bottom: 1.2rem;
+      line-height: 1.5;
+    }
+
+    /* Product pills */
+    .bundle-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.4rem;
+    }
+    .bundle-pill {
+      background: #f5f0e8;
+      border: 1px solid #e8ddc8;
+      color: #555;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.3rem 0.7rem;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .bundle-pill.more {
+      background: #111;
+      color: white;
+      border-color: #111;
+    }
+
+    /* Pricing Row */
+    .bundle-price-row {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 1.2rem;
+    }
+    .bundle-price-new {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #111;
+    }
+    .bundle-price-original {
+      font-size: 1rem;
+      color: #bbb;
+      text-decoration: line-through;
+    }
+    .bundle-save-tag {
+      margin-right: auto;
+      background: #e8f5e9;
+      color: #2e7d32;
+      font-size: 0.78rem;
+      font-weight: 900;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+    }
+
+    /* CTA Button */
+    .bundle-cta {
+      width: 100%;
+      padding: 1rem;
+      background: #111;
+      color: #E3D5C1;
+      border: none;
+      border-radius: 12px;
+      font-weight: 900;
+      font-size: 1rem;
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .bundle-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s;
+    }
+    .bundle-cta:hover { background: #333; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
+    .bundle-cta:hover::before { transform: translateX(100%); }
+
+    /* Empty state */
+    .bundles-empty {
+      text-align: center;
+      padding: 5rem 2rem;
+      opacity: 0.5;
+      grid-column: 1/-1;
+    }
+    .bundles-empty i { font-size: 4rem; margin-bottom: 1rem; display: block; }
+    .bundles-empty p { font-size: 1.2rem; }
+
+    @media (max-width: 768px) {
+      .bundles-grid-new { grid-template-columns: 1fr; }
+      .bundles-hero { padding: 3rem 5%; }
+      .bundles-stats { gap: 1.5rem; }
+    }
+
   </style>
 </head>
 <body>
@@ -513,6 +881,7 @@
     <nav>
       <a onclick="switchView('home')" id="nav-home">الرئيسية</a>
       <a onclick="switchView('shop')" id="nav-shop">المتجر</a>
+      <a onclick="switchView('bundles')" id="nav-bundles">الباندلز</a>
       <a onclick="goToSection('quiz')">اختبار البشرة</a>
       <a onclick="goToSection('footer')">تواصل معنا</a>
     </nav>
@@ -619,13 +988,40 @@
     </div>
   </main>
 
+  <!-- BUNDLES VIEW -->
+  <main id="bundles-view" class="view-section">
+    <!-- Hero Banner -->
+    <div class="bundles-hero">
+      <div class="bundles-hero-content">
+        <div class="bundles-hero-tag">✦ عروض حصرية ✦</div>
+        <h1>باندلز <span>نيمورا</span><br>المميزة</h1>
+        <p>وفري أكثر واحصلي على روتين متكامل بسعر استثنائي، مجموعات مختارة بعناية لكل احتياجاتك</p>
+        <div class="bundles-stats" id="bundles-stats">
+          <!-- injected by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="bundles-filters" id="bundles-filters">
+      <button class="bundle-filter-btn active" onclick="filterBundles('all', this)">الكل</button>
+    </div>
+
+    <!-- Grid -->
+    <div class="bundles-container">
+      <div class="bundles-grid-new" id="bundles-grid">
+        <!-- Bundles injected here -->
+      </div>
+    </div>
+  </main>
+
   <footer class="site-footer" id="footer">
     <div class="footer-container">
       <div class="footer-section">
         <h3 class="logo">NEMORA</h3>
         <p>نيمورا هي علامة تجارية مصرية رائدة، نهدف لتقديم حلول طبية وتجميلية آمنة وفعالة بأعلى معايير الجودة.</p>
         <div class="footer-socials">
-          <a href="#"><i class="fa-brands fa-facebook"></i></a>
+          <a href="https://www.facebook.com/share/1DTxuy1dof/" target="_blank"><i class="fa-brands fa-facebook"></i></a>
           <a href="https://www.instagram.com/nemoracosmo"><i class="fa-brands fa-instagram"></i></a>
           <a href="#"><i class="fa-brands fa-tiktok"></i></a>
         </div>
@@ -638,9 +1034,13 @@
       </div>
       <div class="footer-section">
         <h3>تواصل معنا</h3>
-        <p><i class="fa-solid fa-location-dot"></i> القاهرة، مصر</p>
-        <p><i class="fa-solid fa-phone"></i> +20 128 275 8854</p>
-        <p><i class="fa-solid fa-envelope"></i> info@nemora.com</p>
+        <p style="font-weight:700; margin-bottom:0.8rem;"><i class="fa-solid fa-user-doctor"></i> د. محمود يحيي النجار — المؤسس</p>
+        <p><i class="fa-solid fa-location-dot"></i> البحيرة، مصر</p>
+        <p>
+          <i class="fa-brands fa-whatsapp" style="color:#25D366;"></i>
+          <a href="https://wa.me/201282758854" target="_blank" style="color:#E3D5C1; text-decoration:none;">+20 128 275 8854</a>
+        </p>
+        <p><i class="fa-solid fa-envelope"></i> <a href="mailto:nemoraeng@gmail.com" style="color:#E3D5C1; text-decoration:none;">nemoraeng@gmail.com</a></p>
       </div>
     </div>
     <div class="footer-bottom">
@@ -742,6 +1142,9 @@
       
       document.getElementById('nav-home').classList.toggle('active', view === 'home');
       document.getElementById('nav-shop').classList.toggle('active', view === 'shop');
+      document.getElementById('nav-bundles').classList.toggle('active', view === 'bundles');
+      
+      if (view === 'bundles') renderBundles();
       
       window.scrollTo(0, 0);
       document.querySelectorAll('.reveal').forEach(el => el.classList.remove('active'));
@@ -1101,6 +1504,10 @@
     function toggleAdminPanel() {
       if(!adminEmail) return openLoginModal();
       document.getElementById('adminPanel').classList.toggle('active');
+      if(document.getElementById('adminPanel').classList.contains('active')) {
+        loadProductList();
+        loadCouponsList();
+      }
     }
 
     function switchAdminTab(tab) {
@@ -1109,6 +1516,22 @@
       
       document.getElementById(tab + '-tab').style.display = 'block';
       event.target.style.background = '#25D366';
+      
+      if (tab === 'bundles') {
+        loadBundleProductCheckboxes();
+        loadBundlesAdmin();
+      }
+    }
+    
+    function loadBundleProductCheckboxes() {
+      const container = document.getElementById('bundle-products-checkboxes');
+      if (!container) return;
+      container.innerHTML = PRODS.map(p => `
+        <label style="display:flex; align-items:center; gap:0.5rem; padding:0.4rem 0.2rem; cursor:pointer; font-size:0.88rem;">
+          <input type="checkbox" class="bundle-prod-check" value="${p.id}" style="width:16px; height:16px;" />
+          ${p.name} — <span style="opacity:0.6;">${p.price}</span>
+        </label>
+      `).join('');
     }
 
     function loadProductList() {
@@ -1197,8 +1620,277 @@
       `).join('');
     }
 
+
+    // ========== BUNDLES SYSTEM ==========
+    const DEFAULT_BUNDLES = [
+      {
+        id: 'b1',
+        name: 'باندل البشرة المثالية',
+        desc: 'روتين متكامل لبشرة نضرة وصحية طوال اليوم — غسول + مرطب + واقي شمس',
+        products: ['facewash', 'ceramide', 'sunblock'],
+        discount: 15,
+        badge: 'الأكثر مبيعاً',
+        cat: 'بشرة'
+      },
+      {
+        id: 'b2',
+        name: 'باندل السيروم الذهبي',
+        desc: 'ثلاثة سيرومات قوية لعلاج كل مشاكل بشرتك في روتين واحد',
+        products: ['vitc', 'niacinamide', 'hyaluronic'],
+        discount: 20,
+        badge: 'الأفضل مبيعاً',
+        cat: 'سيروم'
+      },
+      {
+        id: 'b3',
+        name: 'باندل العناية بالشعر',
+        desc: 'كل ما تحتاجينه لشعر صحي ولامع من الجذور للأطراف',
+        products: ['shampoo', 'hairmask', 'hair_oil'],
+        discount: 18,
+        badge: 'جديد',
+        cat: 'شعر'
+      },
+      {
+        id: 'b4',
+        name: 'باندل الإشراق الكامل',
+        desc: 'مجموعة متكاملة للعناية الليلية وتجديد البشرة أثناء النوم',
+        products: ['micellar', 'retinol', 'eyecream', 'nightcream'],
+        discount: 22,
+        badge: 'مميز ذهبي',
+        cat: 'بشرة'
+      }
+    ];
+
+    // Clear old bundle format if it lacks cat field
+    let _storedBundles = JSON.parse(localStorage.getItem('nemora_bundles'));
+    if (_storedBundles && _storedBundles.length > 0 && _storedBundles[0].cat === undefined) {
+      localStorage.removeItem('nemora_bundles');
+      _storedBundles = null;
+    }
+    let bundles = _storedBundles || DEFAULT_BUNDLES;
+
+    function saveBundles() {
+      localStorage.setItem('nemora_bundles', JSON.stringify(bundles));
+    }
+
+    function getBundlePrice(bundle) {
+      const originalTotal = bundle.products.reduce((sum, pid) => {
+        const p = PRODS.find(x => x.id === pid);
+        return sum + (p ? parseInt(p.price) : 0);
+      }, 0);
+      const discounted = Math.round(originalTotal * (1 - bundle.discount / 100));
+      return { original: originalTotal, final: discounted, saving: originalTotal - discounted };
+    }
+
+    function getBundleCategories() {
+      const cats = new Set();
+      bundles.forEach(b => { if(b.cat) cats.add(b.cat); });
+      return [...cats];
+    }
+
+    function filterBundles(cat, btn) {
+      document.querySelectorAll('.bundle-filter-btn').forEach(b => b.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+      renderBundles(cat);
+    }
+
+    function updateBundleStats() {
+      const statsEl = document.getElementById('bundles-stats');
+      if (!statsEl) return;
+      const totalBundles = bundles.length;
+      const avgDiscount = totalBundles > 0 ? Math.round(bundles.reduce((s,b) => s+b.discount, 0) / totalBundles) : 0;
+      const maxSaving = bundles.reduce((max, b) => {
+        const p = getBundlePrice(b);
+        return p.saving > max ? p.saving : max;
+      }, 0);
+      statsEl.innerHTML = `
+        <div class="bundle-stat"><span class="bundle-stat-num">${totalBundles}</span><span class="bundle-stat-label">باندل متاح</span></div>
+        <div class="bundle-stat"><span class="bundle-stat-num">${avgDiscount}%</span><span class="bundle-stat-label">متوسط الخصم</span></div>
+        <div class="bundle-stat"><span class="bundle-stat-num">${maxSaving}</span><span class="bundle-stat-label">أعلى توفير بالجنيه</span></div>
+      `;
+    }
+
+    function updateBundleFilters() {
+      const filtersEl = document.getElementById('bundles-filters');
+      if (!filtersEl) return;
+      const cats = getBundleCategories();
+      filtersEl.innerHTML = `<button class="bundle-filter-btn active" onclick="filterBundles('all', this)">الكل</button>` +
+        cats.map(c => `<button class="bundle-filter-btn" onclick="filterBundles('${c}', this)">${c}</button>`).join('');
+    }
+
+    function renderBundles(filterCat = 'all') {
+      const grid = document.getElementById('bundles-grid');
+      if (!grid) return;
+
+      updateBundleStats();
+      updateBundleFilters();
+
+      const filtered = filterCat === 'all' ? bundles : bundles.filter(b => b.cat === filterCat);
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="bundles-empty"><i class="fa-solid fa-box-open"></i><p>لا توجد باندلز حالياً، ترقبوا عروضنا القادمة!</p></div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map((bundle, idx) => {
+        const pricing = getBundlePrice(bundle);
+        const prods = bundle.products.map(pid => PRODS.find(x => x.id === pid)).filter(Boolean);
+        const mainImg = prods[0]?.img || 'https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&q=80&w=400';
+        const side1Img = prods[1]?.img || '';
+        const side2Img = prods[2]?.img || '';
+
+        // Pills: show max 3 product names + "+N more"
+        const pillsHtml = prods.slice(0, 3).map(p => `<span class="bundle-pill">${p.name.split(' ').slice(0,3).join(' ')}</span>`).join('') +
+          (prods.length > 3 ? `<span class="bundle-pill more">+${prods.length - 3} أكثر</span>` : '');
+
+        const badgeClass = bundle.badge && (bundle.badge.includes('ذهبي') || bundle.badge.includes('مميز') || bundle.badge.includes('الأفضل')) ? 'gold' : '';
+        const delay = idx * 0.1;
+
+        return `
+          <div class="bundle-card-new" style="animation-delay: ${delay}s">
+            <div class="bundle-img-area">
+              ${bundle.badge ? `<div class="bundle-badge-new ${badgeClass}">${bundle.badge}</div>` : ''}
+              <div class="bundle-imgs-collage">
+                ${side1Img ? `<img class="bundle-img-side1" src="${side1Img}" alt="" onerror="this.style.display='none'" />` : ''}
+                <img class="bundle-img-main" src="${mainImg}" alt="${bundle.name}" onerror="this.src='https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&q=80&w=400'" />
+                ${side2Img ? `<img class="bundle-img-side2" src="${side2Img}" alt="" onerror="this.style.display='none'" />` : ''}
+              </div>
+            </div>
+            <div class="bundle-body">
+              ${bundle.cat ? `<div class="bundle-cat-tag">${bundle.cat}</div>` : ''}
+              <div class="bundle-title">${bundle.name}</div>
+              <div class="bundle-subtitle">${bundle.desc || ''}</div>
+              <div class="bundle-pills">${pillsHtml}</div>
+              <div class="bundle-price-row">
+                <span class="bundle-price-new">${pricing.final} جنيه</span>
+                <span class="bundle-price-original">${pricing.original} جنيه</span>
+                <span class="bundle-save-tag">🏷️ وفري ${pricing.saving} جنيه</span>
+              </div>
+              <button class="bundle-cta" onclick="addBundleToCart('${bundle.id}')">
+                <i class="fa-solid fa-cart-plus"></i> أضيفي الباندل للسلة
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+        function addBundleToCart(bundleId) {
+      const bundle = bundles.find(b => b.id === bundleId);
+      if (!bundle) return;
+      const pricing = getBundlePrice(bundle);
+      
+      // Add each product at discounted share
+      bundle.products.forEach(pid => {
+        const p = PRODS.find(x => x.id === pid);
+        if (p) {
+          const existing = cart.find(item => item.id === pid);
+          if (existing) existing.qty++;
+          else cart.push({...p, qty: 1});
+        }
+      });
+      updateCart();
+      showToast(`✅ تم إضافة ${bundle.name} للسلة!`);
+      toggleCart();
+    }
+
+    // ========== ADMIN BUNDLES ==========
+    let editingBundleId = null;
+
+    function loadBundlesAdmin() {
+      const list = document.getElementById('bundles-admin-list');
+      if (!list) return;
+      if (bundles.length === 0) {
+        list.innerHTML = '<p style="opacity:0.6; text-align:center; padding:1rem;">لا توجد باندلز بعد</p>';
+        return;
+      }
+      list.innerHTML = bundles.map(b => {
+        const pricing = getBundlePrice(b);
+        return `
+          <div style="background:rgba(255,255,255,0.2); border-radius:8px; padding:1rem; margin-bottom:0.8rem;">
+            <div style="font-weight:900; font-size:1rem; margin-bottom:0.3rem;">${b.name}</div>
+            <div style="font-size:0.85rem; opacity:0.7; margin-bottom:0.5rem;">${b.products.length} منتجات • خصم ${b.discount}% • ${pricing.final} جنيه</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn-admin" style="flex:1; padding:0.5rem;" onclick="editBundle('${b.id}')">✏️ تعديل</button>
+              <button class="btn-admin btn-danger" style="padding:0.5rem 0.8rem;" onclick="deleteBundle('${b.id}')">🗑️</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function editBundle(id) {
+      const b = bundles.find(x => x.id === id);
+      if (!b) return;
+      editingBundleId = id;
+      document.getElementById('bundle-name-input').value = b.name;
+      document.getElementById('bundle-desc-input').value = b.desc;
+      document.getElementById('bundle-badge-input').value = b.badge || '';
+      document.getElementById('bundle-discount-input').value = b.discount;
+      if(document.getElementById('bundle-cat-input')) document.getElementById('bundle-cat-input').value = b.cat || '';
+      
+      // Check product checkboxes
+      document.querySelectorAll('.bundle-prod-check').forEach(cb => {
+        cb.checked = b.products.includes(cb.value);
+      });
+      
+      document.getElementById('bundle-form-title').innerText = '✏️ تعديل الباندل';
+      document.getElementById('bundle-save-btn').innerText = '💾 حفظ التعديلات';
+    }
+
+    function deleteBundle(id) {
+      if (confirm('هل تريد حذف هذا الباندل؟')) {
+        bundles = bundles.filter(b => b.id !== id);
+        saveBundles();
+        loadBundlesAdmin();
+        renderBundles();
+        showToast('✅ تم حذف الباندل');
+        resetBundleForm();
+      }
+    }
+
+    function resetBundleForm() {
+      editingBundleId = null;
+      document.getElementById('bundle-name-input').value = '';
+      document.getElementById('bundle-desc-input').value = '';
+      document.getElementById('bundle-badge-input').value = '';
+      document.getElementById('bundle-discount-input').value = '';
+      if(document.getElementById('bundle-cat-input')) document.getElementById('bundle-cat-input').value = '';
+      document.querySelectorAll('.bundle-prod-check').forEach(cb => cb.checked = false);
+      document.getElementById('bundle-form-title').innerText = '➕ إضافة باندل جديد';
+      document.getElementById('bundle-save-btn').innerText = '➕ إضافة الباندل';
+    }
+
+    function saveBundle() {
+      const name = document.getElementById('bundle-name-input').value.trim();
+      const desc = document.getElementById('bundle-desc-input').value.trim();
+      const badge = document.getElementById('bundle-badge-input').value.trim();
+      const discount = parseInt(document.getElementById('bundle-discount-input').value);
+      const selectedProds = [...document.querySelectorAll('.bundle-prod-check:checked')].map(cb => cb.value);
+
+      if (!name) return alert('الرجاء إدخال اسم الباندل');
+      if (selectedProds.length < 2) return alert('الرجاء اختيار منتجين على الأقل');
+      if (!discount || discount < 1 || discount > 90) return alert('الرجاء إدخال نسبة خصم صحيحة (1-90)');
+
+      const cat = document.getElementById('bundle-cat-input')?.value.trim() || '';
+      if (editingBundleId) {
+        const idx = bundles.findIndex(b => b.id === editingBundleId);
+        if (idx > -1) bundles[idx] = { id: editingBundleId, name, desc, badge, discount, products: selectedProds, cat };
+        showToast('✅ تم تعديل الباندل!');
+      } else {
+        bundles.push({ id: 'b' + Date.now(), name, desc, badge, discount, products: selectedProds, cat });
+        showToast('✅ تم إضافة الباندل!');
+      }
+
+      saveBundles();
+      loadBundlesAdmin();
+      renderBundles();
+      resetBundleForm();
+    }
+
     // INIT
     renderProducts();
+    renderBundles();
     updateCart();
     checkReveal();
     updateAdminUI();
@@ -1234,9 +1926,10 @@
     </div>
     
     <!-- Tab Buttons -->
-    <div style="display:flex; gap:0.5rem; margin-bottom:1.5rem;">
+    <div style="display:flex; gap:0.5rem; margin-bottom:1.5rem; flex-wrap:wrap;">
       <button class="btn-admin" onclick="switchAdminTab('products')" id="tab-products" style="flex:1; background:#25D366;">المنتجات</button>
       <button class="btn-admin" onclick="switchAdminTab('coupons')" id="tab-coupons" style="flex:1;">الكوبونات</button>
+      <button class="btn-admin" onclick="switchAdminTab('bundles')" id="tab-bundles" style="flex:1;">الباندلز</button>
     </div>
 
     <!-- Products Tab -->
@@ -1295,6 +1988,53 @@
       <div class="admin-section">
         <h3>الكوبونات الحالية</h3>
         <div id="coupons-list"></div>
+      </div>
+    </div>
+
+    <!-- Bundles Tab -->
+    <div id="bundles-tab" class="admin-tab" style="display:none;">
+      <div class="admin-section">
+        <h3 id="bundle-form-title">➕ إضافة باندل جديد</h3>
+        
+        <div class="form-group">
+          <label>اسم الباندل:</label>
+          <input type="text" id="bundle-name-input" placeholder="مثال: باندل العناية الكاملة" />
+        </div>
+        
+        <div class="form-group">
+          <label>الوصف:</label>
+          <textarea id="bundle-desc-input" placeholder="وصف مختصر للباندل..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>الفئة (اختياري):</label>
+          <input type="text" id="bundle-cat-input" placeholder="مثال: بشرة، شعر، سيروم" />
+        </div>
+
+        <div class="form-group">
+          <label>الشارة (اختياري):</label>
+          <input type="text" id="bundle-badge-input" placeholder="مثال: الأكثر مبيعاً" />
+        </div>
+        
+        <div class="form-group">
+          <label>نسبة الخصم (%):</label>
+          <input type="number" id="bundle-discount-input" placeholder="15" min="1" max="90" />
+        </div>
+        
+        <div class="form-group">
+          <label>اختر المنتجات:</label>
+          <div id="bundle-products-checkboxes" style="max-height:200px; overflow-y:auto; border:1px solid #ccc; border-radius:6px; padding:0.5rem;"></div>
+        </div>
+        
+        <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+          <button class="btn-admin" id="bundle-save-btn" onclick="saveBundle()" style="flex:1;">➕ إضافة الباندل</button>
+          <button class="btn-admin" onclick="resetBundleForm()" style="background:#888;">إلغاء</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <h3>الباندلز الحالية</h3>
+        <div id="bundles-admin-list"></div>
       </div>
     </div>
   </div>
