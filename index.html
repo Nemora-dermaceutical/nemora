@@ -413,45 +413,55 @@
       to { opacity: 1; transform: translateY(0); }
     }
     
-    .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin: 3rem 0; }
+    .options { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
+      gap: 1rem; 
+      margin: 2rem 0; 
+    }
     .option-btn { 
-      padding: 1.8rem 1.5rem; 
-      border: 2px solid #f0f0f0; 
+      padding: 1rem 1.2rem; 
+      border: 1.5px solid #f0f0f0; 
       background: #fafafa; 
       cursor: pointer; 
       font-weight: 700; 
-      font-size: 1.1rem;
-      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); 
+      font-size: 1rem;
+      transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); 
       font-family: 'Tajawal', sans-serif;
-      border-radius: 16px;
+      border-radius: 12px;
       color: #555;
     }
     .option-btn:hover { 
       border-color: #e5be81; 
       background: white; 
-      transform: translateY(-5px); 
-      box-shadow: 0 15px 30px rgba(229, 190, 129, 0.15);
+      transform: translateY(-3px); 
+      box-shadow: 0 8px 20px rgba(229, 190, 129, 0.12);
       color: var(--accent-color);
     }
     .option-btn.selected { 
       border-color: #e5be81; 
       background: #fdfaf3; 
       color: #c9a84c; 
-      box-shadow: 0 10px 25px rgba(229, 190, 129, 0.2); 
+      box-shadow: 0 5px 15px rgba(229, 190, 129, 0.15); 
     }
     
-    .quiz-nav { display: flex; justify-content: center; margin-top: 3.5rem; gap: 1.5rem; }
+    .quiz-nav { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      margin-top: 2.5rem; 
+      gap: 1rem; 
+    }
     .nav-btn { 
-      padding: 1.2rem 3.5rem; 
+      padding: 0.8rem 2rem; 
       border: none; 
       cursor: pointer; 
-      font-weight: 900; 
-      font-size: 1rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-      border-radius: 50px;
-      min-width: 180px;
+      font-weight: 700; 
+      font-size: 0.95rem;
+      transition: all 0.3s;
+      border-radius: 30px;
+      flex: 1;
+      max-width: 200px;
     }
     #nextBtn { background: var(--accent-color); color: var(--bg-color); }
     #nextBtn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
@@ -1095,8 +1105,8 @@
         </div>
 
         <div class="quiz-nav">
-          <button id="prevBtn" class="nav-btn" onclick="changeStep(-1)" style="display:none;">السابق</button>
-          <button id="nextBtn" class="nav-btn" onclick="changeStep(1)">التالي</button>
+          <button id="prevBtn" class="nav-btn" onclick="changeStep(-1)" style="display:none;"><i class="fa-solid fa-chevron-right"></i> السابق</button>
+          <button id="nextBtn" class="nav-btn" onclick="changeStep(1)">التالي <i class="fa-solid fa-chevron-left"></i></button>
         </div>
       </div>
     </section>
