@@ -1002,6 +1002,12 @@
 </head>
 <body>
 
+  <div id="announcement-bar" style="display:none; background: #111; color: #E3D5C1; text-align: center; padding: 0.6rem; font-weight: 900; font-size: 0.9rem; z-index: 2000; position: relative;">
+    <a id="announcement-link" href="#" style="color: inherit; text-decoration: none;">
+      <span id="announcement-text"></span>
+    </a>
+  </div>
+
   <div class="progress-container">
     <div class="progress-bar" id="progressBar"></div>
   </div>
@@ -1679,6 +1685,37 @@
       if(document.getElementById('adminPanel')?.classList.contains('active')) loadCouponsList();
     });
 
+    // Sync Ad Settings
+    db.ref('settings/ad').on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        if(document.getElementById('ad-enable')) document.getElementById('ad-enable').checked = data.enabled || false;
+        if(document.getElementById('ad-text')) document.getElementById('ad-text').value = data.text || '';
+        if(document.getElementById('ad-link')) document.getElementById('ad-link').value = data.link || '';
+        
+        const bar = document.getElementById('announcement-bar');
+        const textEl = document.getElementById('announcement-text');
+        const linkEl = document.getElementById('announcement-link');
+        if(bar && textEl && linkEl) {
+          if (data.enabled && data.text) {
+            bar.style.display = 'block';
+            textEl.innerText = data.text;
+            linkEl.href = data.link || '#';
+          } else {
+            bar.style.display = 'none';
+          }
+        }
+      }
+    });
+
+    function saveAdSettings() {
+      const enabled = document.getElementById('ad-enable').checked;
+      const text = document.getElementById('ad-text').value.trim();
+      const link = document.getElementById('ad-link').value.trim();
+      db.ref('settings/ad').set({ enabled, text, link });
+      showToast('✅ تم حفظ إعدادات الإعلان!');
+    }
+
     // Sync Products from Firebase
     db.ref('products').on('value', (snapshot) => {
       const data = snapshot.val();
@@ -1775,9 +1812,18 @@
       `).join('');
     }
 
+    function prepareNewProduct() {
+      document.getElementById('product-select').value = '';
+      document.getElementById('product-name').value = '';
+      document.getElementById('product-cat').value = '';
+      document.getElementById('product-price').value = '';
+      document.getElementById('product-desc').value = '';
+      document.getElementById('product-image').value = '';
+    }
+
     function loadProductList() {
       const select = document.getElementById('product-select');
-      select.innerHTML = '<option value="">-- اختر منتج --</option>';
+      select.innerHTML = '<option value="">-- منتج جديد --</option>';
       PRODS.forEach(p => {
         const option = document.createElement('option');
         option.value = p.id;
@@ -1788,11 +1834,15 @@
 
     function loadProductData() {
       const productId = document.getElementById('product-select').value;
-      if(!productId) return;
+      if(!productId) {
+        prepareNewProduct();
+        return;
+      }
       
       const product = PRODS.find(p => p.id === productId);
       if(product) {
         document.getElementById('product-name').value = product.name;
+        document.getElementById('product-cat').value = product.cat || '';
         document.getElementById('product-price').value = product.price.replace(' جنيه', '');
         document.getElementById('product-desc').value = product.desc;
         document.getElementById('product-image').value = product.img;
@@ -1800,20 +1850,62 @@
     }
 
     function saveProduct() {
+      const name = document.getElementById('product-name').value.trim();
+      const cat = document.getElementById('product-cat').value.trim();
+      const price = document.getElementById('product-price').value.trim();
+      const desc = document.getElementById('product-desc').value.trim();
+      const img = document.getElementById('product-image').value.trim();
+
+      if(!name || !cat || !price) return alert('الرجاء إدخال اسم المنتج، القسم، والسعر');
+
       const productId = document.getElementById('product-select').value;
-      if(!productId) return alert('الرجاء اختيار منتج');
       
-      const product = PRODS.find(p => p.id === productId);
-      if(product) {
-        product.name = document.getElementById('product-name').value;
-        product.price = document.getElementById('product-price').value + ' جنيه';
-        product.desc = document.getElementById('product-desc').value;
-        product.img = document.getElementById('product-image').value;
-        
-        // Sync to Firebase
+      if(productId) {
+        // Edit existing
+        const product = PRODS.find(p => p.id === productId);
+        if(product) {
+          product.name = name;
+          product.cat = cat;
+          product.price = price + ' جنيه';
+          product.desc = desc;
+          product.img = img;
+        }
+        showToast('✅ تم حفظ التعديلات سحابياً!');
+      } else {
+        // Add new
+        const newProduct = {
+          id: 'p' + Date.now(),
+          cat: cat,
+          name: name,
+          price: price + ' جنيه',
+          desc: desc,
+          img: img,
+          usage: '',
+          warnings: ''
+        };
+        PRODS.push(newProduct);
+        showToast('✅ تم إضافة المنتج الجديد سحابياً!');
+      }
+      
+      db.ref('products').set(PRODS);
+      renderProducts();
+      loadProductList();
+      if(!productId) {
+        document.getElementById('product-select').value = PRODS[PRODS.length - 1].id;
+      }
+    }
+
+    function deleteProduct() {
+      const productId = document.getElementById('product-select').value;
+      if(!productId) return alert('الرجاء اختيار منتج لحذفه');
+      
+      if(confirm('هل أنت متأكد من حذف هذا المنتج نهائياً؟')) {
+        PRODS = PRODS.filter(p => p.id !== productId);
         db.ref('products').set(PRODS);
         renderProducts();
-        showToast('✅ تم حفظ التعديلات سحابياً!');
+        loadProductList();
+        prepareNewProduct();
+        showToast('✅ تم حذف المنتج سحابياً!');
       }
     }
 
@@ -2201,16 +2293,21 @@
       <button class="btn-admin" onclick="switchAdminTab('products')" id="tab-products" style="flex:1; background:#25D366;">المنتجات</button>
       <button class="btn-admin" onclick="switchAdminTab('coupons')" id="tab-coupons" style="flex:1;">الكوبونات</button>
       <button class="btn-admin" onclick="switchAdminTab('bundles')" id="tab-bundles" style="flex:1;">الباندلز</button>
+      <button class="btn-admin" onclick="switchAdminTab('ads')" id="tab-ads" style="flex:1;">الإعلانات</button>
     </div>
 
     <!-- Products Tab -->
     <div id="products-tab" class="admin-tab">
       <div class="admin-section">
-        <h3>تعديل المنتج</h3>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <h3 style="margin:0;">إدارة المنتجات</h3>
+          <button class="btn-admin" style="margin:0; padding:0.5rem 1rem;" onclick="prepareNewProduct()">➕ منتج جديد</button>
+        </div>
+        
         <div class="form-group">
-          <label>اختر المنتج:</label>
+          <label>اختر المنتج للتعديل:</label>
           <select id="product-select" onchange="loadProductData()">
-            <option value="">-- اختر منتج --</option>
+            <option value="">-- منتج جديد --</option>
           </select>
         </div>
         
@@ -2219,6 +2316,11 @@
           <input type="text" id="product-name" placeholder="اسم المنتج" />
         </div>
         
+        <div class="form-group">
+          <label>القسم:</label>
+          <input type="text" id="product-cat" placeholder="مثال: بشرة، شعر، سيروم، جسم" />
+        </div>
+
         <div class="form-group">
           <label>السعر (جنيه):</label>
           <input type="number" id="product-price" placeholder="السعر" />
@@ -2234,7 +2336,10 @@
           <input type="text" id="product-image" placeholder="https://..." />
         </div>
         
-        <button class="btn-admin" onclick="saveProduct()">💾 حفظ التعديلات</button>
+        <div style="display:flex; gap:0.5rem; margin-top:1rem;">
+          <button class="btn-admin" onclick="saveProduct()" style="flex:1;">💾 حفظ</button>
+          <button class="btn-admin btn-danger" onclick="deleteProduct()" style="flex:1;">🗑️ حذف</button>
+        </div>
       </div>
     </div>
 
@@ -2269,6 +2374,30 @@
       <div class="admin-section">
         <h3>الكوبونات الحالية</h3>
         <div id="coupons-list"></div>
+      </div>
+    </div>
+
+    <!-- Ads Tab -->
+    <div id="ads-tab" class="admin-tab" style="display:none;">
+      <div class="admin-section">
+        <h3>شريط الإعلانات العلوي</h3>
+        
+        <div class="form-group" style="flex-direction:row; align-items:center; gap:1rem;">
+          <label style="margin:0;">تفعيل الإعلان:</label>
+          <input type="checkbox" id="ad-enable" style="width:20px; height:20px;" />
+        </div>
+
+        <div class="form-group">
+          <label>نص الإعلان:</label>
+          <input type="text" id="ad-text" placeholder="مثال: شحن مجاني للطلبات فوق 500 جنيه!" />
+        </div>
+        
+        <div class="form-group">
+          <label>الرابط (اختياري):</label>
+          <input type="text" id="ad-link" placeholder="رابط عند الضغط على الإعلان" />
+        </div>
+        
+        <button class="btn-admin" onclick="saveAdSettings()">💾 حفظ إعدادات الإعلان</button>
       </div>
     </div>
 
